@@ -1,0 +1,11 @@
+# Keep the database settings file private
+<Files "config.php">
+  Require all denied
+</Files>
+# Repository files that don't belong on the public site
+<FilesMatch "\.(sql|md)$|^config\.example\.php$|^\.git">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 ^/(node-version|\.git)(/|$)
+# Don't list folder contents
+Options -Indexes

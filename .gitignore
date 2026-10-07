@@ -1,3 +1,5 @@
+# Real database login lives only on the server
+config.php
 node_modules/
 .env
 .DS_Store

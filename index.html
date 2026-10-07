@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paycheck Payoff Planner</title>
+<meta name="description" content="Enter your paycheck, monthly expenses and debts, pick a payoff timeline, and see how much interest you save and what investing and saving could grow into.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%232f6bff'/%3E%3Ctext x='16' y='22' font-size='17' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='700'%3E$%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Paycheck Payoff Planner</h1>
+      <p>Enter your paycheck, monthly expenses and debts. Pick a payoff timeline to see how much interest you save and what investing could grow into.</p>
+    </div>
+    <div class="header-actions">
+      <button class="pill" id="example" type="button">Try an example</button>
+      <button class="pill" id="reset" type="button">Start over</button>
+    </div>
+  </header>
+
+  <nav class="stepper" aria-label="Steps">
+    <button type="button" data-go="1"><i>1</i>Money in &amp; out</button>
+    <button type="button" data-go="2"><i>2</i>Your plan</button>
+    <button type="button" data-go="3"><i>3</i>Your numbers</button>
+  </nav>
+
+  <main>
+    <!-- PAGE 1 -->
+    <section class="glass panel page" id="page1" aria-labelledby="h1p">
+      <div class="step">
+        <div class="step-head"><span class="step-num">1</span><h2 id="h1p" tabindex="-1">Money in &amp; out</h2></div>
+        <p class="page-intro">What comes in each paycheck, what goes out each month, and what you owe.</p>
+
+        <div class="field">
+          <div class="field-top">
+            <label for="pay">Take-home pay per paycheck</label>
+            <div class="bubble"><span>$</span><input id="pay" type="number" inputmode="decimal" min="0" step="50" placeholder="0"></div>
+          </div>
+          <input id="payR" type="range" min="0" max="10000" step="50" aria-label="Take-home pay per paycheck">
+          <div class="scale"><span>$0</span><span>$10,000</span></div>
+          <div class="pills" id="freq" role="group" aria-label="How often you're paid">
+            <button class="pill" type="button" data-f="weekly">Weekly</button>
+            <button class="pill" type="button" data-f="biweekly">Every 2 weeks</button>
+            <button class="pill" type="button" data-f="monthly">Monthly</button>
+          </div>
+          <div class="caption" id="incomeCaption"></div>
+        </div>
+
+        <div class="reveal" data-level="1">
+        <div class="divider"></div>
+
+        <div class="field">
+          <div class="field-top">
+            <label for="bills">Monthly bills &amp; expenses</label>
+            <div class="bubble"><span>$</span><input id="bills" type="number" inputmode="decimal" min="0" step="25" placeholder="0"></div>
+          </div>
+          <input id="billsR" type="range" min="0" max="10000" step="25" aria-label="Monthly bills and expenses">
+          <div class="scale"><span>$0</span><span>$10,000</span></div>
+          <div class="caption">Everything you spend in a month other than debt payments: rent, groceries, utilities, subscriptions.</div>
+        </div>
+        </div>
+
+        <div class="reveal" data-level="2">
+        <div class="divider"></div>
+
+        <div class="list-block">
+          <div class="list-head"><h3>Debts</h3><span class="total">Owed <b id="debtTotal">$0</b></span></div>
+          <div class="rows" id="debts"></div>
+          <button class="add" id="addDebt" type="button">+ Add debt</button>
+        </div>
+        </div>
+      </div>
+
+      <div class="nav-row reveal" data-level="2">
+        <button class="cta" type="button" data-go="2">Continue to your plan →</button>
+        <p class="err" id="err1" hidden>Enter your take-home pay to continue.</p>
+      </div>
+    </section>
+
+    <!-- PAGE 2 -->
+    <section class="glass panel page" id="page2" aria-labelledby="h2p" hidden>
+      <div class="step">
+        <div class="step-head"><span class="step-num">2</span><h2 id="h2p" tabindex="-1">Your plan</h2></div>
+        <p class="page-intro">How fast you want to be debt-free, and whether you want to start investing.</p>
+
+        <div class="field">
+          <div class="field-top">
+            <label for="months">Pay off all debt in</label>
+            <div class="bubble"><input id="months" type="number" inputmode="numeric" min="3" max="60" step="1"><span>months</span></div>
+          </div>
+          <input id="monthsR" type="range" min="3" max="60" step="1" aria-label="Payoff timeline in months">
+          <div class="ticks" id="monthTicks"></div>
+          <div class="caption" id="monthsCaption"></div>
+        </div>
+
+        <div class="field">
+          <div class="switch-row">
+            <div><div class="t">Start investing</div><div class="s">Optional. Grows at a conservative 6% a year.</div></div>
+            <button class="switch" id="investOn" type="button" role="switch" aria-checked="true" aria-label="Start investing"></button>
+          </div>
+          <div class="invest-body field" id="investBody">
+            <div class="field-top">
+              <label for="invest">Invest each month</label>
+              <div class="bubble"><span>$</span><input id="invest" type="number" inputmode="decimal" min="0" step="25" placeholder="0"></div>
+            </div>
+            <input id="investR" type="range" min="0" max="3000" step="25" aria-label="Monthly investment">
+            <div class="scale"><span>$0</span><span>$3,000</span></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="switch-row">
+            <div><div class="t">Build savings</div><div class="s">Optional. Earns 3.5% a year in a high-yield savings account.</div></div>
+            <button class="switch save" id="saveOn" type="button" role="switch" aria-checked="false" aria-label="Build savings"></button>
+          </div>
+          <div class="invest-body field" id="saveBody">
+            <div class="field">
+              <div class="field-top">
+                <label for="goal">Savings goal</label>
+                <div class="bubble"><span>$</span><input id="goal" type="number" inputmode="decimal" min="0" step="250" placeholder="0"></div>
+              </div>
+              <input id="goalR" type="range" min="0" max="50000" step="250" aria-label="Savings goal">
+              <div class="scale"><span>$0</span><span>$50,000</span></div>
+            </div>
+            <div class="field">
+              <div class="field-top">
+                <label for="save">Save each month</label>
+                <div class="bubble"><span>$</span><input id="save" type="number" inputmode="decimal" min="0" step="25" placeholder="0"></div>
+              </div>
+              <input id="saveR" type="range" min="0" max="3000" step="25" aria-label="Monthly savings">
+              <div class="scale"><span>$0</span><span>$3,000</span></div>
+              <div class="caption" id="goalCaption"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="back" type="button" data-go="1">← Back</button>
+        <button class="cta" type="button" data-go="3">See my numbers →</button>
+      </div>
+    </section>
+
+    <!-- PAGE 3 -->
+    <section class="glass panel page wide" id="page3" aria-labelledby="h3p" hidden>
+      <div class="step-head"><span class="step-num">3</span><h2 id="h3p" tabindex="-1">Your numbers</h2></div>
+      <div class="res-grid" aria-live="polite">
+      <div class="res-col">
+
+      <div class="res-head">
+        <div class="eyebrow" id="heroLabel">Interest saved in 1 year</div>
+        <div class="hero-num" id="heroNum">$0</div>
+        <div class="hero-sub" id="heroSub"></div>
+      </div>
+
+      <div class="budget">
+        <div class="bar" aria-hidden="true">
+          <i class="b-bills" id="bBills"></i><i class="b-debt" id="bDebt"></i><i class="b-invest" id="bInvest"></i><i class="b-save" id="bSave"></i><i class="b-left" id="bLeft"></i>
+        </div>
+        <div class="legend">
+          <span style="--c: var(--bills)">Expenses <b id="lBills">$0</b></span>
+          <span style="--c: var(--debt)">Debt <b id="lDebt">$0</b></span>
+          <span style="--c: var(--invest)">Investing <b id="lInvest">$0</b></span>
+          <span style="--c: var(--save)">Saving <b id="lSave">$0</b></span>
+          <span style="--c: var(--left)">Left over <b id="lLeft">$0</b></span>
+        </div>
+      </div>
+      <p class="note">Estimates only, not financial advice. Minimum payments are estimated as each month's interest plus 1% of the balance (at least $25), the usual credit card formula. Interest is charged monthly, and any extra payment goes to your highest-rate debt first. Investments compound monthly at 6% a year and savings at 3.5% a year. Real returns and savings rates vary.</p>
+      </div>
+
+      <div class="res-col">
+      <div class="stats">
+        <div class="stat"><div class="k"><span>Pay toward debt each month</span><small id="minNote"></small></div><div class="v" id="sPay">$0</div></div>
+        <div class="stat"><div class="k"><span id="intLabel">Interest you'll pay</span><small id="intNote"></small></div><div class="v" id="sInt">$0</div></div>
+        <div class="stat"><div class="k"><span id="remLabel">Debt left</span><small id="remNote"></small></div><div class="v" id="sRem">$0</div></div>
+        <div class="stat invest" id="investStat"><div class="k"><span id="invLabel">Investments at 6%</span><small id="invNote"></small></div><div class="v" id="sInv">$0</div></div>
+        <div class="stat save" id="saveStat"><div class="k"><span id="saveLabel">Savings at 3.5%</span><small id="saveNote"></small></div><div class="v" id="sSave">$0</div></div>
+        <div class="stat" id="leftStat"><div class="k"><span>Left over each month</span><small id="leftNote"></small></div><div class="v" id="sLeft">$0</div></div>
+        <div class="stat free"><div class="k"><span>Debt-free by</span><small id="freeNote"></small></div><div class="v" id="sFree">—</div></div>
+      </div>
+      </div>
+      </div>
+
+      <div class="nav-row">
+        <button class="back" type="button" data-go="2">← Back to your plan</button>
+        <button class="back" type="button" data-go="1" style="margin-left:auto">Edit money in &amp; out</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="wall" id="wall" role="dialog" aria-modal="true" aria-labelledby="wallTitle" hidden>
+  <div class="glass wall-card">
+    <div class="lock" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="3"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <h2 id="wallTitle">Your numbers are ready</h2>
+    <p>Enter your email to see how much interest you save and what your money could grow into.</p>
+    <!-- Kit embed form 10012089 (attributes from Kit's embed code), styled with this page's design -->
+    <form id="gateForm" action="https://app.kit.com/forms/10012089/subscriptions" class="seva-form formkit-form" method="post" data-sv-form="10012089" data-uid="1352595d84" data-format="inline" data-version="5" data-options="{&quot;settings&quot;:{&quot;after_subscribe&quot;:{&quot;action&quot;:&quot;message&quot;,&quot;success_message&quot;:&quot;Success! Now check your email for the results.&quot;,&quot;redirect_url&quot;:&quot;&quot;},&quot;analytics&quot;:{&quot;google&quot;:null,&quot;fathom&quot;:null,&quot;facebook&quot;:null,&quot;segment&quot;:null,&quot;pinterest&quot;:null,&quot;sparkloop&quot;:null,&quot;googletagmanager&quot;:null},&quot;modal&quot;:{&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;powered_by&quot;:{&quot;show&quot;:false,&quot;url&quot;:&quot;https://kit.com/features/forms?utm_campaign=poweredby&amp;utm_content=form&amp;utm_medium=referral&amp;utm_source=dynamic&quot;},&quot;recaptcha&quot;:{&quot;enabled&quot;:false},&quot;return_visitor&quot;:{&quot;action&quot;:&quot;show&quot;,&quot;custom_content&quot;:&quot;&quot;},&quot;slide_in&quot;:{&quot;display_in&quot;:&quot;bottom_right&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15},&quot;sticky_bar&quot;:{&quot;display_in&quot;:&quot;top&quot;,&quot;trigger&quot;:&quot;timer&quot;,&quot;scroll_percentage&quot;:null,&quot;timer&quot;:5,&quot;devices&quot;:&quot;all&quot;,&quot;show_once_every&quot;:15}},&quot;version&quot;:&quot;5&quot;}" min-width="400 500 600 700 800">
+      <div data-style="clean">
+        <ul class="formkit-alert formkit-alert-error kit-errors" data-element="errors" data-group="alert"></ul>
+        <div data-element="fields" data-stacked="false" class="seva-fields formkit-fields kit-fields">
+          <div class="formkit-field bubble"><input class="formkit-input" id="gateEmail" name="email_address" aria-label="Email Address" placeholder="Email address" required type="email" autocomplete="email" inputmode="email"></div>
+          <button data-element="submit" class="formkit-submit cta" id="gateBtn"><div class="formkit-spinner"><div></div><div></div><div></div></div><span>Show my numbers</span></button>
+        </div>
+      </div>
+      <p class="err" id="gateErr" hidden></p>
+    </form>
+    <p class="fine">You'll be added to our email list, and we'll save the numbers you entered with your email. You can unsubscribe anytime.</p>
+    <button class="back" type="button" data-go="2">← Back to your plan</button>
+  </div>
+</div>
+<!-- end wall -->
+
+<script src="https://f.convertkit.com/ckjs/ck.5.js" onload="window.kitReady = true"></script>
+<script src="app.js"></script>
+</body>
+</html>

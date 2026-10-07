@@ -1,47 +1,32 @@
 # Paycheck Payoff Planner
 
-A three-step calculator:
+A three-step calculator: paycheck, expenses and debts, then a payoff plan with optional investing (6%) and a savings goal (3.5% high-yield savings), then results behind an email wall connected to Kit.
 
-1. **Money in & out**: take-home pay per paycheck, monthly expenses and debts (each section unblurs once the one before it is filled in).
-2. **Your plan**: a payoff timeline of up to 5 years with magnetic markers, plus optional investing (6% a year) and a savings goal (3.5% high-yield savings).
-3. **Your numbers**: interest saved, the monthly debt payment, investment and savings growth, and a debt-free date. Visitors enter their email to see this page; the email is added to a Kit form.
+This folder is the live site for Hostinger (PHP + MySQL). The Node.js version is in [`node-version/`](node-version/).
 
-## Run it
+## Files
 
-Needs [Node.js](https://nodejs.org) 18 or newer. There are no dependencies to install.
+| File | What it is |
+| --- | --- |
+| `index.html`, `styles.css`, `app.js` | The calculator page |
+| `subscribe.php` | Saves each signup and its numbers to MySQL |
+| `config.example.php` | Template for `config.php` (database login). Copy it to `config.php` on the server. |
+| `database.sql` | Tables to import in phpMyAdmin |
+| `.htaccess` | Blocks `config.php` and the repository-only files from the web |
 
-```bash
-npm start
-```
+`config.php` is never committed (see `.gitignore`), so the database password stays on the server.
 
-Then open http://localhost:3000.
+## Email signups
 
-## Settings
+The email wall uses Kit's embed form (form 10012089) and Kit's script (`ck.5.js`), so Kit handles the signup in the browser. After Kit confirms, `subscribe.php` saves the signup to the database. Typing `ABCD` in the email box opens the results without subscribing (set in `app.js` as `DEV_CODE`).
 
-Set these as environment variables (see `.env.example`):
+## Deploying to Hostinger
 
-| Variable | Default | What it does |
-| --- | --- | --- |
-| `PORT` | `3000` | Port the server listens on |
-| `KIT_FORM_ID` | `10012089` | Kit form that receives signups |
-| `DEV_CODE` | `ABCD` | Typing this in the email box opens the results without subscribing. Set it to an empty value to turn it off. |
+1. hPanel → Databases: create a database, then import `database.sql` in phpMyAdmin.
+2. hPanel → Advanced → Git: add this repository (branch `main`, folder `public_html`) and turn on auto deployment.
+3. In File Manager, copy `config.example.php` to `config.php` and fill in the database login.
 
-On Node 20.6 or newer you can keep them in a `.env` file and run `node --env-file=.env server.js`.
-
-## How the email wall works
-
-The browser sends the email to `POST /api/subscribe` on this server. The server checks it, then forwards it to `https://app.kit.com/forms/<KIT_FORM_ID>/subscriptions` as `email_address`, the same field Kit's embed form uses. Kit's own confirmation or welcome emails follow the form's settings in Kit.
-
-If Kit can't be reached, the visitor still sees their results and the error is logged on the server.
-
-## Project layout
-
-```
-server.js          Node server: static files + /api/subscribe
-public/index.html  Page markup
-public/styles.css  Styles (light and dark themes)
-public/app.js      Calculator logic, page flow and email wall
-```
+Every push to `main` then updates the live site.
 
 ## Notes on the math
 
